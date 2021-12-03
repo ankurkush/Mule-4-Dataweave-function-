@@ -1,0 +1,41 @@
+%dw 2.0
+output application/json skipNullOn = "everywhere"
+
+var Input_payload=
+ [
+    {"message": " ",
+    "abcd":{
+        "def":"",
+        "ghj":"asd"
+    },
+    "efgh":[{
+        "wed":"",
+        "tuv":"wxy"
+    }]
+    }
+]
+var output =[
+  {
+    "abcd": {
+      "ghj": "asd"
+    },
+    "efgh": [
+      {
+        "tuv": "wxy"
+      }
+    ]
+  }
+]
+
+
+
+fun trimfunc(value) = value match {
+        case is Object -> value mapObject {
+            ($$) : trimfunc($)
+        }
+        case is Array -> value map (trimfunc($))
+        case is String -> if(trim($)=="") null else trim($)
+        else -> $
+}
+---
+trimfunc(i1)
